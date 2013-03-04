@@ -24,6 +24,11 @@ Unlike a simplistic solution with a few autocmds, this plugin still allows for
 exceptions like disabling the cursorline for a particular window or making it
 permanent for (another) window.
 
+SEE ALSO								     *
+
+- The RelativeNumberCurrentWindow plugin (vimscript #0000) enables the
+  'relativenumber' setting only for the current window.
+
 RELATED WORKS								     *
 
 The basic idea is outlined in the Vim Tips Wiki:
