@@ -26,7 +26,7 @@ permanent for (another) window.
 
 SEE ALSO								     *
 
-- The RelativeNumberCurrentWindow plugin (vimscript #0000) enables the
+- The RelativeNumberCurrentWindow plugin (vimscript #4461) enables the
   'relativenumber' setting only for the current window.
 
 RELATED WORKS								     *
@@ -62,10 +62,10 @@ window by setting a window-local variable: >
 INSTALLATION				*CursorLineCurrentWindow-installation*
 
 This script is packaged as a |vimball|. If you have the "gunzip" decompressor
-in your PATH, simply edit the *.vba.gz package in Vim; otherwise, decompress
+in your PATH, simply edit the *.vmb.gz package in Vim; otherwise, decompress
 the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
 vimball or via the |:UseVimball| command. >
-    vim CursorLineCurrentWindow.vba.gz
+    vim CursorLineCurrentWindow*.vmb.gz
     :so %
 To uninstall, use the |:RmVimball| command.
 
