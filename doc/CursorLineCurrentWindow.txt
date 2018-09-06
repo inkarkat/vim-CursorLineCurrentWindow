@@ -33,6 +33,8 @@ RELATED WORKS								     *
 
 The basic idea is outlined in the Vim Tips Wiki:
     http://vim.wikia.com/wiki/Highlight_current_line
+- cursorline_current.vim (vimscript #5740) enables cursorline only in the
+  current window and when not in insert mode.
 
 ==============================================================================
 USAGE					       *CursorLineCurrentWindow-usage*
@@ -95,7 +97,7 @@ Allow persistent cursorlines via w:persistent_cursorline.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2012 Ingo Karkat
+Copyright: (C) 2012-2018 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
