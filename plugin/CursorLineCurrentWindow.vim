@@ -2,7 +2,7 @@
 "
 " DEPENDENCIES:
 "
-" Copyright: (C) 2012 Ingo Karkat
+" Copyright: (C) 2012-2019 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -24,44 +24,71 @@ let g:loaded_CursorLineCurrentWindow = 1
 " better value inheritance when splitting windows than a separate window-local
 " variable would.
 
+function! s:GetGlobal( optionName ) abort
+    execute 'return &g:' . a:optionName
+endfunction
+function! s:GetLocal( optionName ) abort
+    execute 'return &l:' . a:optionName
+endfunction
+function! s:SetGlobal( optionName, value ) abort
+    execute 'let &g:' . a:optionName . ' = a:value'
+endfunction
+function! s:Set( optionName, value ) abort
+    execute 'let &' . a:optionName . ' = a:value'
+endfunction
+function! s:SetLocal( optionName, value ) abort
+    execute 'let &l:' . a:optionName . ' = a:value'
+endfunction
+function! s:GetPersistent( optionName ) abort
+    let l:varName = 'w:persistent_' . a:optionName
+    if exists(l:varName)
+	execute 'return' l:varName
+    else
+	return 0
+    endif
+endfunction
 function! s:CursorLineOnEnter()
-    if s:cursorline
-	if &g:cursorline || exists('w:persistent_cursorline') && w:persistent_cursorline
-	    setlocal cursorline
+    if ! empty(s:store['cursorline'])
+	if ! empty(s:GetGlobal('cursorline')) || ! empty(s:GetPersistent('cursorline'))
+	    call s:SetLocal('cursorline', s:store['cursorline'])
 	else
-	    setglobal cursorline
+	    call s:SetGlobal('cursorline', s:store['cursorline'])
 	endif
     else
-	setlocal nocursorline
+	let l:offValue = (type(s:store['cursorline']) == type(0) ? 0 : '')
+	call s:SetLocal('cursorline', l:offValue)
     endif
 endfunction
 function! s:CursorLineOnLeave()
-    if s:cursorline
-	if &l:cursorline
-	    if ! &g:cursorline
+    if ! empty(s:store['cursorline'])
+	if ! empty(s:GetLocal('cursorline'))
+	    if empty(s:GetGlobal('cursorline'))
 		" user did :setlocal cursorline
-		set cursorline
+		call s:Set('cursorline', s:GetLocal('cursorline'))
 	    endif
 	else
-	    if &g:cursorline
+	    if ! empty(s:GetGlobal('cursorline'))
 		" user did :setlocal nocursorline
+		call s:Set('cursorline', s:GetLocal('cursorline'))
 		set nocursorline
 	    else
 		" user did :set nocursorline
-		let s:cursorline = 0
+		let s:store['cursorline'] = s:GetLocal('cursorline')
 	    endif
 	endif
 
-	if exists('w:persistent_cursorline') && w:persistent_cursorline
-	    setglobal nocursorline
-	    setlocal cursorline
+	let l:offValue = (type(s:store['cursorline']) == type(0) ? 0 : '')
+	let l:persistentValue = s:GetPersistent('cursorline')
+	if ! empty(l:persistentValue)
+	    call s:SetGlobal('cursorline', l:offValue)
+	    call s:SetLocal('cursorline', l:persistentValue)
 	else
-	    setlocal nocursorline
+	    call s:SetLocal('cursorline', l:offValue)
 	endif
     else
-	if &g:cursorline && &l:cursorline
+	if ! empty(s:GetGlobal('cursorline')) && ! empty(s:GetLocal('cursorline'))
 	    " user did :set cursorline
-	    let s:cursorline = 1
+	    let s:store['cursorline'] = s:GetLocal('cursorline')
 	endif
     endif
 endfunction
@@ -69,7 +96,7 @@ endfunction
 
 "- autocmds --------------------------------------------------------------------
 
-let s:cursorline = &g:cursorline
+let s:store = {'cursorline': &g:cursorline}
 augroup CursorLine
     autocmd!
     autocmd VimEnter,WinEnter,BufWinEnter * call <SID>CursorLineOnEnter()
