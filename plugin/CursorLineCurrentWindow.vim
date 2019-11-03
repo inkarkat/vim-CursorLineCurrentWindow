@@ -15,6 +15,16 @@ let g:loaded_CursorLineCurrentWindow = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+"- configuration ---------------------------------------------------------------
+
+if ! exists('g:CursorLineCurrentWindow_OptionNames')
+    let g:CursorLineCurrentWindow_OptionNames = []
+    for s:optionName in ['cursorline', 'cursorcolumn']
+	execute 'if &' . s:optionName . '| call add(g:CursorLineCurrentWindow_OptionNames, "' . s:optionName . '") | endif'
+    endfor
+endif
+
+
 "- functions -------------------------------------------------------------------
 
 " Note: We use both global and local optionvalues to store the states, though
@@ -83,7 +93,10 @@ endfunction
 augroup CursorLine
     autocmd!
 augroup END
-call s:CreateFunctionsForFlag('cursorline')
+for s:optionName in g:CursorLineCurrentWindow_OptionNames
+    call s:CreateFunctionsForFlag(s:optionName)
+endfor
+unlet! s:optionName
 delfunction s:CreateFunctionsForFlag
 delfunction s:Expand
 
