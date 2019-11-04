@@ -113,6 +113,10 @@ https://github.com/inkarkat/vim-CursorLineCurrentWindow/issues or email
 ==============================================================================
 HISTORY					     *CursorLineCurrentWindow-history*
 
+2.00	RELEASEME
+- ENH: Generalize to also handle 'cursorcolumn' and non-flag window options
+  like (new in Vim 8.1.1391) 'wincolor'.
+
 1.00	18-Aug-2012
 First published version.
 

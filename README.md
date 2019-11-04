@@ -11,10 +11,11 @@ indication of the currently active window is the different 'statusline'
 highlighting (with hl-StatusLine vs. hl-StatusLineNC).
 
 This plugin avoids the clutter of multiple highlighted screen lines with split
-windows by disabling the 'cursorline' setting for all but the current window.
-Unlike a simplistic solution with a few autocmds, this plugin still allows for
-exceptions like disabling the cursorline for a particular window or making it
-permanent for (another) window.
+windows by disabling the 'cursorline', 'cursorcolumn', and/or 'wincolor'
+settings for all but the current window. Unlike a simplistic solution with a
+few autocmds, this plugin still allows for exceptions like disabling the
+cursorline for a particular window or making it permanent for (another)
+window.
 
 ### SEE ALSO
 
@@ -31,11 +32,12 @@ The basic idea is outlined in the Vim Tips Wiki:
 USAGE
 ------------------------------------------------------------------------------
 
-    Globally enable 'cursorline' in your vimrc via
-        :set cursorline
-    After sourcing this plugin, 'cursorline' will only be active for the current
+    Globally enable 'cursorline', 'cursorcolumn' and/or 'wincolor' in your
+    vimrc; e.g.
+        :set cursorline cursorcolumn
+    After sourcing this plugin, the option(s) will only be active for the current
     window. So with multiple split windows, only one of them, the one where the
-    cursor is in, will have the 'cursorline'.
+    cursor is in, will have 'cursorline' and 'cursorcolumn' enabled.
 
     Disable cursorline for the current window via:
         :setlocal nocursorline
@@ -73,6 +75,18 @@ To uninstall, use the :RmVimball command.
 
 - Requires Vim 7.0 or higher.
 
+CONFIGURATION
+------------------------------------------------------------------------------
+
+For a permanent configuration, put the following commands into your vimrc:
+
+By default, the plugin will localize any of 'cursorline', 'cursorcolumn', or
+'wincolor' options, provided they are set during startup. To cover options
+that may be set on demand or to drop a set option, the List of option names
+can be overridden:
+
+    let g:CursorLineCurrentWindow_OptionNames = ['cursorline']
+
 CONTRIBUTING
 ------------------------------------------------------------------------------
 
@@ -82,6 +96,10 @@ https://github.com/inkarkat/vim-CursorLineCurrentWindow/issues or email
 
 HISTORY
 ------------------------------------------------------------------------------
+
+##### 2.00    RELEASEME
+- ENH: Generalize to also handle 'cursorcolumn' and non-flag window options
+  like (new in Vim 8.1.1391) 'wincolor'.
 
 ##### 1.00    18-Aug-2012
 - First published version.
