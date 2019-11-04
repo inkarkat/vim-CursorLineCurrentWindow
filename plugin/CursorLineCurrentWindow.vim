@@ -19,8 +19,8 @@ set cpo&vim
 
 if ! exists('g:CursorLineCurrentWindow_OptionNames')
     let g:CursorLineCurrentWindow_OptionNames = []
-    for s:optionName in ['cursorline', 'cursorcolumn']
-	execute 'if &' . s:optionName . '| call add(g:CursorLineCurrentWindow_OptionNames, "' . s:optionName . '") | endif'
+    for s:optionName in ['cursorline', 'cursorcolumn', 'wincolor']
+	execute 'if ! empty(&' . s:optionName . ') | call add(g:CursorLineCurrentWindow_OptionNames, "' . s:optionName . '") | endif'
     endfor
 endif
 
@@ -80,6 +80,59 @@ function! s:CreateFunctionsForFlag( optionName ) abort
     \   'let s:%s = &g:%s' . "\n" .
     \   '', a:optionName)
 endfunction
+function! s:CreateFunctionsForOptionValue( optionName ) abort
+    execute s:Expand(
+    \   'function! s:OnEnter_%s()' . "\n" .
+    \   '   if ! empty(s:%s)' . "\n" .
+    \   '	if ! empty(&g:%s) || exists("w:persistent_%s") && w:persistent_%s' . "\n" .
+    \   '	    let &l:%s = s:%s' . "\n" .
+    \   '	else' . "\n" .
+    \   '	    let &g:%s = s:%s' . "\n" .
+    \   '	endif' . "\n" .
+    \   '   else' . "\n" .
+    \   '	setlocal %s=' . "\n" .
+    \   '    endif' . "\n" .
+    \   'endfunction' . "\n" .
+    \   'function! s:OnLeave_%s()' . "\n" .
+    \   '    if ! empty(s:%s)' . "\n" .
+    \   '	if ! empty(&l:%s)' . "\n" .
+    \   '	    if empty(&g:%s)' . "\n" .
+    \   '		" user did :setlocal %s=...' . "\n" .
+    \   '		let &%s = &g:%s' . "\n" .
+    \   '	    endif' . "\n" .
+    \   '	else' . "\n" .
+    \   '	    if ! empty(&g:%s)' . "\n" .
+    \   '		" user did :setlocal %s=' . "\n" .
+    \   '		set %s=' . "\n" .
+    \   '	    else' . "\n" .
+    \   '		" user did :set %s=' . "\n" .
+    \   '		let s:%s = ""' . "\n" .
+    \   '	    endif' . "\n" .
+    \   '	endif' . "\n" .
+    \   '	if exists("w:persistent_%s") && w:persistent_%s' . "\n" .
+    \   '	    setglobal %s=' . "\n" .
+    \   '	    let &l:%s = s:%s' . "\n" .
+    \   '	else' . "\n" .
+    \   '	    setlocal %s=' . "\n" .
+    \   '	endif' . "\n" .
+    \   '    else' . "\n" .
+    \   '	if ! empty(&g:%s) && ! empty(&l:%s)' . "\n" .
+    \   '	    " user did :set %s=...' . "\n" .
+    \   '	    let s:%s = &l:%s' . "\n" .
+    \   '	endif' . "\n" .
+    \   '    endif' . "\n" .
+    \   'endfunction' . "\n" .
+    \   'let s:%s = &g:%s' . "\n" .
+    \   '', a:optionName)
+endfunction
+function! s:CreateFunctions( optionName ) abort
+    execute 'let l:isFlag = (type(&' . s:optionName . ') == type(0))'
+    if l:isFlag
+	call s:CreateFunctionsForFlag(s:optionName)
+    else
+	call s:CreateFunctionsForOptionValue(s:optionName)
+    endif
+endfunction
 function! s:CreateAutocommands( optionName ) abort
     augroup CursorLine
 	execute s:Expand(
@@ -95,12 +148,13 @@ augroup CursorLine
     autocmd!
 augroup END
 for s:optionName in g:CursorLineCurrentWindow_OptionNames
-    call s:CreateFunctionsForFlag(s:optionName)
+    call s:CreateFunctions(s:optionName)
     call s:CreateAutocommands(s:optionName)
 endfor
 unlet! s:optionName
 delfunction s:CreateFunctionsForFlag
 delfunction s:CreateAutocommands
+delfunction s:CreateFunctions
 delfunction s:Expand
 
 let &cpo = s:save_cpo
