@@ -79,7 +79,8 @@ function! s:CreateFunctionsForFlag( optionName ) abort
     \   'endfunction' . "\n" .
     \   'let s:%s = &g:%s' . "\n" .
     \   '', a:optionName)
-
+endfunction
+function! s:CreateAutocommands( optionName ) abort
     augroup CursorLine
 	execute s:Expand(
 	\   '    autocmd VimEnter,WinEnter,BufWinEnter * call <SID>OnEnter_%s()' .
@@ -95,9 +96,11 @@ augroup CursorLine
 augroup END
 for s:optionName in g:CursorLineCurrentWindow_OptionNames
     call s:CreateFunctionsForFlag(s:optionName)
+    call s:CreateAutocommands(s:optionName)
 endfor
 unlet! s:optionName
 delfunction s:CreateFunctionsForFlag
+delfunction s:CreateAutocommands
 delfunction s:Expand
 
 let &cpo = s:save_cpo
