@@ -80,9 +80,6 @@ function! s:CreateFunctionsForFlag( optionName ) abort
     \   '    endif' . "\n" .
     \   'endfunction' . "\n" .
     \   '', a:optionName)
-    execute s:Expand(
-    \   'let s:%s = &g:%s' . "\n" .
-    \   '', a:optionName)
 endfunction
 function! s:CreateFunctionsForOptionValue( optionName ) abort
     execute s:Expand(
@@ -129,9 +126,6 @@ function! s:CreateFunctionsForOptionValue( optionName ) abort
     \   '    endif' . "\n" .
     \   'endfunction' . "\n" .
     \   '', a:optionName)
-    execute s:Expand(
-    \   'let s:%s = &g:%s' . "\n" .
-    \   '', a:optionName)
 endfunction
 function! s:CreateFunctions( optionName ) abort
     execute 'let l:isFlag = (type(&' . s:optionName . ') == type(0))'
@@ -140,6 +134,9 @@ function! s:CreateFunctions( optionName ) abort
     else
 	call s:CreateFunctionsForOptionValue(s:optionName)
     endif
+endfunction
+function! s:Init( optionName ) abort
+    execute s:Expand('let s:%s = &g:%s', a:optionName)
 endfunction
 function! s:CreateAutocommands( optionName ) abort
     augroup CursorLine
@@ -157,13 +154,16 @@ augroup CursorLine
 augroup END
 for s:optionName in g:CursorLineCurrentWindow_OptionNames
     call s:CreateFunctions(s:optionName)
+    call s:Init(s:optionName)
     call s:CreateAutocommands(s:optionName)
 endfor
 unlet! s:optionName
-delfunction s:CreateFunctionsForFlag
-delfunction s:CreateAutocommands
-delfunction s:CreateFunctions
 delfunction s:Expand
+delfunction s:CreateFunctionsForFlag
+delfunction s:CreateFunctionsForOptionValue
+delfunction s:CreateFunctions
+delfunction s:Init
+delfunction s:CreateAutocommands
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
