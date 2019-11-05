@@ -19,7 +19,7 @@ set cpo&vim
 
 if ! exists('g:CursorLineCurrentWindow_OptionNames')
     let g:CursorLineCurrentWindow_OptionNames = []
-    for s:optionName in ['cursorline', 'cursorcolumn', 'wincolor']
+    for s:optionName in ['cursorline', 'cursorcolumn'] + (exists('&wincolor') ? ['wincolor'] : [])
 	execute 'if ! empty(&' . s:optionName . ') | call add(g:CursorLineCurrentWindow_OptionNames, "' . s:optionName . '") | endif'
     endfor
 endif
