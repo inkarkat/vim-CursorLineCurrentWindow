@@ -48,6 +48,8 @@ function! s:CreateFunctionsForFlag( optionName ) abort
     \   '	setlocal no%s' . "\n" .
     \   '    endif' . "\n" .
     \   'endfunction' . "\n" .
+    \   '', a:optionName)
+    execute s:Expand(
     \   'function! s:OnLeave_%s()' . "\n" .
     \   '    if s:%s' . "\n" .
     \   '	if &l:%s' . "\n" .
@@ -77,6 +79,8 @@ function! s:CreateFunctionsForFlag( optionName ) abort
     \   '	endif' . "\n" .
     \   '    endif' . "\n" .
     \   'endfunction' . "\n" .
+    \   '', a:optionName)
+    execute s:Expand(
     \   'let s:%s = &g:%s' . "\n" .
     \   '', a:optionName)
 endfunction
@@ -93,6 +97,8 @@ function! s:CreateFunctionsForOptionValue( optionName ) abort
     \   '	setlocal %s=' . "\n" .
     \   '    endif' . "\n" .
     \   'endfunction' . "\n" .
+    \   '', a:optionName)
+    execute s:Expand(
     \   'function! s:OnLeave_%s()' . "\n" .
     \   '    if ! empty(s:%s)' . "\n" .
     \   '	if ! empty(&l:%s)' . "\n" .
@@ -122,6 +128,8 @@ function! s:CreateFunctionsForOptionValue( optionName ) abort
     \   '	endif' . "\n" .
     \   '    endif' . "\n" .
     \   'endfunction' . "\n" .
+    \   '', a:optionName)
+    execute s:Expand(
     \   'let s:%s = &g:%s' . "\n" .
     \   '', a:optionName)
 endfunction
