@@ -1,8 +1,9 @@
 " CursorLineCurrentWindow.vim: Only highlight the screen line of the cursor in the currently active window.
 "
 " DEPENDENCIES:
+"   - Requires Vim 7.0 or higher.
 "
-" Copyright: (C) 2012-2019 Ingo Karkat
+" Copyright: (C) 2012-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
