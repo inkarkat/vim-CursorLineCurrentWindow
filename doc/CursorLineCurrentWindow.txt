@@ -113,7 +113,7 @@ https://github.com/inkarkat/vim-CursorLineCurrentWindow/issues or email
 ==============================================================================
 HISTORY					     *CursorLineCurrentWindow-history*
 
-2.00	RELEASEME
+2.00	09-Feb-2020
 - ENH: Generalize to also handle 'cursorcolumn' and non-flag window options
   like (new in Vim 8.1.1391) 'wincolor'.
 
@@ -127,7 +127,7 @@ Allow persistent cursorlines via w:persistent_cursorline.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2012-2019 Ingo Karkat
+Copyright: (C) 2012-2020 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
